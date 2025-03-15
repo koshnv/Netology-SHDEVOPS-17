@@ -23,10 +23,10 @@
 | **Тип публичного IP**       | Динамический                 |
 | **Публичный IPv4-адрес**    | 158.160.128.23               |
 | **Прерываемая**             | ✅ Да                        |
-![Параметры VM](Netology-SHDEVOPS-17/virtd-homeworks/05-virt-01-basics/settings_VM.png)
+![Параметры VM](05-virt-01-basics/settings_VM.png)
 
 **Проверка установленного ПО:**
-![Проверка установленного ПО](Netology-SHDEVOPS-17/05-virt-01-basics/ssh_docker_version.png)
+![Проверка установленного ПО](ssh_docker_version.png)
 
 
 # Задача 2
