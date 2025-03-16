@@ -18,7 +18,7 @@
 Связка Win11 + Hyper-v > Ubuntu 24
 Результат:
 Итоговой **Vagrantfile**:
-[Vagrantfile](Vagrantfile)
+[Vagrantfile](src/Vagrantfile)
 ![Проверка установки Docker](vagrant_ubutu_docker.png)
 
 
@@ -26,7 +26,7 @@
 Создать сценарий сборки образа для packer, забросить его в облако яндекс, создать ВМ, проверить предустановленный софт.
 
 **Ответ:
-1. Отредактированный файл сборки для Packer [mydebian.json.pkr.hcl](mydebian.json.pkr.hcl), установлено:htop и tmux.
+1. Отредактированный файл сборки для Packer [mydebian.json.pkr.hcl](src/mydebian.json.pkr.hcl), установлено:htop и tmux.
 3. Образ в консоли яндекса: 
 ```
 yc compute image list
@@ -47,5 +47,5 @@ yc compute instance create \
   --network-interface subnet-name=default-ru-central1-a,nat-ip-version=ipv4 \
   --ssh-key ~/.ssh/id_ed25519.pub
 ```
-6. Подключение по SSH, проверка софта
+6. Подключение по SSH, проверка софта:
 [ВМ и проверка софта](VM_soft.png)  
