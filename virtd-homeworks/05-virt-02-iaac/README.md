@@ -16,10 +16,12 @@
 1. Создайте виртуальную машину Virtualbox с помощью Vagrant. 
 2. Зайдите внутрь ВМ и убедитесь, что Docker установлен.
 
-Связка Win11 + Hyper-v > Ubuntu 24.
 Результат:
-Итоговой **Vagrantfile**:
-[Vagrantfile](src/Vagrantfile)
+
+Связка Win11 + Hyper-v > Ubuntu 24.
+
+🚀 **Результат:** Итоговой Vagrantfile: [Vagrantfile](src/Vagrantfile)
+
 ![Проверка установки Docker](vagrant_ubutu_docker.png)
 
 
