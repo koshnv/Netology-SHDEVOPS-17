@@ -1,0 +1,57 @@
+NET = "192.168.56."
+DOMAIN = ".netology"
+HOST_PREFIX = "server"
+BOX_PATH = "/home/kosh/DZ/db50d2a7-2dd2-4beb-b2ff-3f1c04e5d11a.box"
+
+servers = [
+  {
+    :hostname => HOST_PREFIX + "1" + DOMAIN,
+    :ip => NET + "11",
+    :ssh_host => "20011",
+    :ssh_vm => "2222",
+    :ram => 1024,
+    :core => 1
+  }
+]
+
+Vagrant.configure(2) do |config|
+  config.vm.synced_folder ".", "/vagrant", disabled: false
+
+  # Убираю свой ключ, не дидет авторизация при установке
+  # config.ssh.private_key_path = SSH_PRIVATE_KEY_PATH  # Удалено
+
+  # Включаем SSH агент и использование встроенного ключа Vagrant
+  config.ssh.forward_agent = true
+  # Включаем авто-вставку ключа (сгенерированного по умолчанию)
+  config.ssh.insert_key = true
+
+  servers.each do |machine|
+    config.vm.define machine[:hostname] do |node|
+      # Путь к локальной коробке
+      config.vm.box = "db50d2a7-2dd2-4beb-b2ff-3f1c04e5d11a"
+      config.vm.box_url = "file://#{BOX_PATH}"
+      node.vm.hostname = machine[:hostname]
+      node.vm.network "private_network", ip: machine[:ip]
+      node.vm.network :forwarded_port, guest: machine[:ssh_vm], host: machine[:ssh_host]
+      node.vm.provider "virtualbox" do |vb|
+        vb.customize ["modifyvm", :id, "--memory", machine[:ram]]
+        vb.customize ["modifyvm", :id, "--cpus", machine[:core]]
+        vb.name = machine[:hostname]
+      end
+      node.vm.provision "shell", inline: <<-EOF
+        export DEBIAN_FRONTEND=noninteractive
+        sudo apt-get update
+        sudo apt-get install -y ca-certificates curl gnupg
+        sudo mkdir -p /etc/apt/keyrings && sudo chmod 0755 /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        sudo chmod a+r /etc/apt/keyrings/docker.gpg
+        echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+          $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+          sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+      EOF
+    end
+  end
+end
