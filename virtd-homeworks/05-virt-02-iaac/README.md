@@ -13,9 +13,10 @@
 
 ## Задача 2
 **Задание:**
-1. Создайте виртуальную машину Virtualbox с помощью Vagrant и  
-2. Зайдите внутрь ВМ и убедитесь, что Docker установлен с помощью команды:
-Связка Win11 + Hyper-v > Ubuntu 24
+1. Создайте виртуальную машину Virtualbox с помощью Vagrant. 
+2. Зайдите внутрь ВМ и убедитесь, что Docker установлен.
+
+Связка Win11 + Hyper-v > Ubuntu 24.
 Результат:
 Итоговой **Vagrantfile**:
 [Vagrantfile](src/Vagrantfile)
@@ -31,9 +32,11 @@
 ```
 yc compute image list
 ```
-[Список образов](image.png)  
-4. Ссылка на документацию по образам: https://yandex.cloud/ru/docs/compute/cli-ref/image/list 
-5. Создано новая VM
+
+![Список образов](image.png) 
+
+4. Ссылка на документацию по образам: https://yandex.cloud/ru/docs/compute/cli-ref/image/list.
+5. Создано новая VM:
 ```sh
 yc compute instance create \
   --name debian-vm \
@@ -48,4 +51,4 @@ yc compute instance create \
   --ssh-key ~/.ssh/id_ed25519.pub
 ```
 6. Подключение по SSH, проверка софта:
-[ВМ и проверка софта](VM_soft.png)  
+![ВМ и проверка софта](VM_soft.png)  
