@@ -1,0 +1,50 @@
+{
+ "¿ociVersion": "1.0.0",
+ "process": {
+   "terminal": true,
+   "user": { "uid": 0, "gid": 0 },
+   "args": ["/usr/bin/python3.11", "-c", "print('Hello from runC!')"],
+   "env": [
+     "PATH=/usr/bin:/bin",
+     "TERM=xterm",
+     "LD_LIBRARY_PATH=/usr/local/lib:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu"
+   ],
+   "cwd": "/",
+   "capabilities": {
+     "bounding": ["CAP_AUDIT_WRITE", "CAP_KILL", "CAP_NET_BIND_SERVICE"]
+   }
+ },
+ "root": {
+   "path": "rootfs",
+   "readonly": true
+ },
+ "hostname": "my-container",
+ "mounts": [
+   {
+     "destination": "/proc",
+     "type": "proc",
+     "source": "proc"
+   },
+   {
+     "destination": "/dev",
+     "type": "tmpfs",
+     "source": "tmpfs",
+     "options": ["nosuid", "strictatime", "mode=755"]
+   },
+   {
+     "destination": "/dev/pts",
+     "type": "devpts",
+     "source": "devpts",
+     "options": ["nosuid", "noexec", "newinstance", "ptmxmode=0666"]
+   }
+ ],
+ "linux": {
+   "namespaces": [
+     {"type": "pid"},
+     {"type": "network"},
+     {"type": "ipc"},
+     {"type": "uts"},
+     {"type": "mount"}
+   ]
+ }
+}
