@@ -1,4 +1,4 @@
-## Задача 1
+## Задача 1 - соберите проект из fork репозитория  
 Делаю форк репозитория, для удобства на локальном компьютере добавляю его в нужную директорию через субмодули:  
 `$ git submodule add https://github.com/koshnv/shvirtd-example-python.git virtd-homeworks/05-virt-04-docker-in-practice/shvirtd-example-python`
 
@@ -25,20 +25,23 @@
 
 Собираю образ:  
 `$ docker build -f Dockerfile.python -t python-app:test .`  
-`$ docker images`
+`$ docker images`  
+
 ---
-## Задача 2
+
+## Задача 2 - Просканируйте образ на уязвимости  
 
 Создаю реестр в Yandex Cloud:  
 `$ yc container registry create --name test`  
 
-Вывод команды:  
-    `done (1s)`  
-    `id: crp951l9uq6957ruf56i`  
-    `folder_id: b1gl1jlokpp0fb08pgic`  
-    `name: test`  
-    `status: ACTIVE`  
-    `created_at: "2025-04-13T12:43:55.901Z"`  
+    Вывод команды:  
+            `done (1s)`  
+            `id: crp951l9uq6957ruf56i`  
+            `folder_id: b1gl1jlokpp0fb08pgic`  
+            `name: test`  
+            `status: ACTIVE`  
+            `created_at: "2025-04-13T12:43:55.901Z"  
+
 Для отправки в реестр добавляю префикс реестра:  
 `$ docker tag python-app:test cr.yandex/crp951l9uq6957ruf56i/python-app:test`  
 Загружаю образ в Yandex Container Registry:  
@@ -48,9 +51,11 @@
 Тестирую образ:  
 `$ yc container image scan crpsnslet6k7f2vu7f77`  
 ![Сканрование образа](img/scan_yandex_cloud_container_registry.png)
+
 ---
 
-## Задача 3
+## Задача 3 - Создайте в репозитории с проектом файл compose.yaml  
+
 Создаю файл `compose.yaml`.  
 Вместо сборки образа локально (с использованием `Dockerfile.python`) решил скачать его из Yandex Container Registry. Возможный вариант сборки:  
 `build:`  
@@ -74,7 +79,7 @@ SELECT * FROM requests LIMIT 10;
 ![ответ на 3 задание](img/task_3_result.png)
 ---
 
-## Задача 4  
+## Задача 4 - Напишите bash-скрипт, который запустит проект  
 
 Создаю директорию `deploy` и перехожу в неё:
    ```bash
@@ -152,7 +157,7 @@ cat ~/.docker/config.json
    ![Ответ на 4 задание](img/task_4_result.png)
 ---
 
-## Задача 5
+## Задача 5  - bash скрипт который произведет резервное копирование БД mysql  
 
 Создаю каталог для бэкапов:  
 ```bash  
@@ -237,7 +242,7 @@ crontab -e
 ![Скриншот crontab](img/crontab_task_5.png)
 ---
 
-## Задача 6
+## Задача 6 - скопируйте бинарный файл /bin/terraform на свою локальную машину, используя dive и docker save  
 
 Устанавливаю dive:
 ```bash
@@ -270,7 +275,7 @@ tar -xvf 63be41f6e91654e2eb3654a0d780e15fa9a05bc062b9ec1c8f3189f650a1393d bin/te
 ![Скачевание на локальный ПК](img/local_download_terraform.png)
 ---
 
-## Задача 6.1
+## Задача 6.1 - скопируйте бинарный файл /bin/terraform на свою локальную машину, используя docker cp  
 
 Создаю временный контейнер из образа:
 `docker create --name terraform-temp hashicorp/terraform:1.8.0`
@@ -315,13 +320,13 @@ cat output.txt
 ![Ответ на 6.2 задание](img/task_6_2_result.png)
 ---
 
-## Задача 7
+## Задача 7 - Запустите ваше python-приложение с помощью runC, не используя docker или containerd
 **Запуск Python-приложения с runC**
 
-Возможное решение через создание:
-1. **Минимальная файловая система** с `busybox`
-2. **Устанавливаем Python внутрь rootfs**
-3. **Устанавливаем зависимости для Python**
+План реалзации:
+1. **Минимальная файловая система `rootfs` с `busybox`** 
+2. **Устанавливаем Python в бинароном виде внутрь rootfs**, копирую из образа `python:3.11-slim`
+3. **Устанавливаем зависимости для Python**, копирую из образа `python:3.11-slim`
 4. **OCI-совместимый конфиг для runC**
 5. **Стартуем приложение**
 
@@ -339,6 +344,15 @@ cd my_container
 sudo docker export $(sudo docker create busybox) | sudo tar -C rootfs -xvf -  
 ```  
 Ленюсь и использую **Docker**, чтобы быстро получить базовую файловую систему. В реальной среде можно скачать `busybox` вручную.  
+Ручная установка долгая, слудующие этапы:  
+1. Скачать статический бинарник BusyBox(https://busybox.net/downloads/)  
+2. Создай базовые директории  
+3. Установи BusyBox  
+4. Настрить /dev: Создать минимальные устройства  
+4. Создай минимальный /etc.  
+6. Можно запускать как контейнер: sudo systemd-nspawn -D .   
+
+
 ![Содержимое rootfs](img/rootfs.png)  
 
 В файловой системе нет Python и его зависимых библиотек, беру базовый образ python:3.11-slim и все вытаскиваю из него:  
